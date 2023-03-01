@@ -1,0 +1,35 @@
+1. 从原图中截取面部轮廓特征；
+2. 加载视频；
+   + 获取帧率、视频的每一帧列表；
+3. 获取需要被换脸的目标脸（视频中需要被替换的脸）；
+4. inference；
+   + 使用原始帧得到换面帧
+   + param: 视频的每一帧列表、源脸、目标脸、人脸emb、人脸生成、人脸裁剪、是否传入目标脸照片、
+   + 1）获取目标图像的Arcface emb；
+   + 2）从原始帧和变换中获取裁剪的面；
+   + 3）normalize原图并emb；
+   + 4）enumerate frames list：
+        + 调整裁剪帧的大小，并获得vector，显示在哪些帧上有面；
+        + 有面的帧进行normalize；
+        + for 对batch_size目标图像应用换面模型；
+        + for 生成转换后的最终帧列表（有面的）；
+   + return：转换后的帧列表、需要裁剪的帧、需要裁剪的帧对应的转换；
++ 5. if image2video：
+	    + for 根据帧合成视频；
+	    + 从原视频中抽取audio并add；
+
+
+inVideo4，1min 4s
+batch_size=40，9044 M、total time 3min 7s
+batch_size=10，6438 M、total time 2min 25s
+减小batch_size能降低显存，但是生成结果没有明显区别
+
+
+
+
+'''
+显存需求
+中间帧率低导致快速动作脸跟不上？
+文件大小？生成分辨率、帧率一样
+调下效果
+'''
